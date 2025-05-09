@@ -9,12 +9,13 @@ public abstract class Spawner<T> : MonoBehaviour where T: MonoBehaviour
 
     protected Pool<T> _pool;
     protected int _totalCreated;
-    protected int _totalActive;
+    protected int _totalSpawned;
 
     public event Action Created;
 
     public int TotalCreated => _totalCreated;
-    public int TotalActive => _totalActive;
+    public int TotalSpawned => _totalSpawned;
+    public int ActiveCount => _pool.ActiveObj;
 
     protected virtual void Awake()
     {
@@ -32,7 +33,7 @@ public abstract class Spawner<T> : MonoBehaviour where T: MonoBehaviour
     public virtual T Get(Vector3 position)
     {
         T instance = _pool.Get();
-        _totalCreated++;
+        _totalSpawned++;
         Created?.Invoke();
         instance.transform.position = position; 
         instance.gameObject.SetActive(true);

@@ -1,10 +1,9 @@
 using UnityEngine;
-using System.Collections;
 
 public class Explosion : MonoBehaviour
 {
-    [SerializeField] private float _explosionRadius = 5f;
-    [SerializeField] private float _explosionForce = 10f;
+    [SerializeField] private float _explosionRadius;
+    [SerializeField] private float _explosionForce;
 
     private Pool<Bomb> _bombPool;
 
@@ -21,12 +20,12 @@ public class Explosion : MonoBehaviour
         Material bombMaterial = bomb.GetMaterial();
         Color color = bombMaterial.color;
 
-        
         foreach (Collider collider in colliders)
         {
-            Debug.Log(collider);
             if (collider.TryGetComponent(out Rigidbody rigidbody))
+            {
                 rigidbody.AddExplosionForce(explosionForce, bomb.transform.position, explosionRadius);
+            }
         }
 
         _bombPool.Release(bomb);

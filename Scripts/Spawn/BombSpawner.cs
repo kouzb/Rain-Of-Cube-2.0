@@ -7,10 +7,6 @@ public class BombSpawner : Spawner<Bomb>
 
     public event Action BombExploded;
 
-    private int _activeBombs;
-
-    public int ActiveBombs => _activeBombs;
-
     protected override void Awake()
     {
         base.Awake();
@@ -24,7 +20,6 @@ public class BombSpawner : Spawner<Bomb>
     public override Bomb Get(Vector3 position)
     {
         Bomb bomb = base.Get(position);
-        _activeBombs++;
         bomb.Exploded += Explode;
         return bomb;
     }
@@ -44,7 +39,6 @@ public class BombSpawner : Spawner<Bomb>
     {
         _explosion.Explode(bomb);
         bomb.Exploded -= Explode;
-        _activeBombs--;
         BombExploded?.Invoke();
     }
 }

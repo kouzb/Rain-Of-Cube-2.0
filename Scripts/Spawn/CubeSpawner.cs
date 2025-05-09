@@ -22,16 +22,11 @@ public class CubeSpawner : Spawner<Cube>
         StartCoroutine(ContinuousSpawning());
     }
 
-    public void Release(Cube cube) 
+    private void Release(Cube cube) 
     {
-        _pool.Release(cube);
         cube.Released -= HandleCubeReleased;
         CubeReleased?.Invoke(cube);
-    }
-
-    public int GetCountActive()
-    {
-        return Cube.ActiveCubes;
+        _pool.Release(cube);
     }
 
     protected override void InitializePool()
@@ -66,6 +61,7 @@ public class CubeSpawner : Spawner<Cube>
 
     private void HandleCubeReleased(Cube cube)
     {
+        Release(cube);
         _bombSpawner.Get(cube.transform.position);
         cube.gameObject.SetActive(false);
     }
