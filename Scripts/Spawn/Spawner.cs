@@ -5,7 +5,7 @@ public abstract class Spawner<T> : MonoBehaviour where T: MonoBehaviour
 {
     [SerializeField] protected T _prefab;
     [SerializeField] protected int _poolCapacity = 5;
-    [SerializeField] protected int _poolMaxSize = 5;
+    [SerializeField] protected int _poolMaxSize = 10;
 
     protected Pool<T> _pool;
     protected int _totalCreated;
@@ -24,19 +24,28 @@ public abstract class Spawner<T> : MonoBehaviour where T: MonoBehaviour
 
     protected abstract void InitializePool();
 
+    public virtual T Get(Vector3 position)
+    {
+        T instance = _pool.Get();
+        Created?.Invoke();
+        instance.transform.position = position; 
+        instance.gameObject.SetActive(true);
+        _totalSpawned++;
+        CheckCreatedObj();
+        return instance;
+    }
+
     protected virtual T CreateInstance()
     {
         T instance = Instantiate(_prefab);
         return instance;
     }
 
-    public virtual T Get(Vector3 position)
+    private void CheckCreatedObj()
     {
-        T instance = _pool.Get();
-        _totalSpawned++;
-        Created?.Invoke();
-        instance.transform.position = position; 
-        instance.gameObject.SetActive(true);
-        return instance;
+        if (_totalCreated <= _poolMaxSize)
+        {
+            _totalCreated++;
+        }
     }
 }
