@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class SpawnerStatsUI : MonoBehaviour
 {
-    [SerializeField] private CubeSpawner _cubeSpawner;
-    [SerializeField] private BombSpawner _bombSpawner;
+    [SerializeField] private Spawner<Bomb> _bombSpawner;
+    [SerializeField] private Spawner<Cube> _cubeSpawner;
 
     [SerializeField] protected TMP_Text _cubeStatsText;
 

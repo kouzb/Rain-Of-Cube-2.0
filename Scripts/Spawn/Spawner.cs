@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Pool;
 
 public abstract class Spawner<T> : MonoBehaviour where T: MonoBehaviour
 {
@@ -7,7 +8,7 @@ public abstract class Spawner<T> : MonoBehaviour where T: MonoBehaviour
     [SerializeField] protected int _poolCapacity = 5;
     [SerializeField] protected int _poolMaxSize = 10;
 
-    protected Pool<T> _pool;
+    protected ObjectPool<T> _pool;
     protected int _totalCreated;
     protected int _totalSpawned;
 
@@ -15,7 +16,7 @@ public abstract class Spawner<T> : MonoBehaviour where T: MonoBehaviour
 
     public int TotalCreated => _totalCreated;
     public int TotalSpawned => _totalSpawned;
-    public int ActiveCount => _pool.ActiveObj;
+    public int ActiveCount => _pool.CountActive;
 
     protected virtual void Awake()
     {

@@ -14,9 +14,7 @@ public class Cube : MonoBehaviour
 
     public event UnityAction<Cube> Released;
 
-    public static int ActiveCubes { get; private set; }
-
-    private void Awake()
+    private void Start()
     {
         _renedererColor = GetComponent<MeshRenderer>();
         _rigidbody = GetComponent<Rigidbody>();
@@ -25,11 +23,6 @@ public class Cube : MonoBehaviour
     private void OnEnable()
     {
         ResetParameters();
-    }
-
-    public void InitVelocity(Vector3 velocity)
-    {
-        _rigidbody.velocity = velocity;
     }
 
     private void OnCollisionEnter(Collision collision)

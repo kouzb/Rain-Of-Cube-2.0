@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Pool;
 
 public class CubeSpawner : Spawner<Cube>
 {
@@ -18,25 +19,25 @@ public class CubeSpawner : Spawner<Cube>
     }
 
     private void Start()
-    {   
+    {
         StartCoroutine(ContinuousSpawning());
     }
 
     private void Release(Cube cube) 
     {
         cube.Released -= HandleCubeReleased;
-        CubeReleased?.Invoke(cube);
         _pool.Release(cube);
     }
 
     protected override void InitializePool()
     {
-        _pool = new Pool<Cube>(
+        _pool = new ObjectPool<Cube>(
             CreateInstance,
             Prepare,
             cube => cube.gameObject.SetActive(false),
-            _poolCapacity,
-            _poolMaxSize
+            collectionCheck: true,
+            defaultCapacity: _poolCapacity,
+            maxSize: _poolMaxSize
             );
     }
 
@@ -44,14 +45,13 @@ public class CubeSpawner : Spawner<Cube>
     {
         cube.transform.position = _spawnPoint.position;
         cube.gameObject.SetActive(true);
-        cube.InitVelocity(Vector3.up);
         cube.Released += HandleCubeReleased;
     }
 
     private IEnumerator ContinuousSpawning()
     {
         WaitForSeconds wait = new WaitForSeconds(_repeatRate);
-
+        
         while (_isSpawning)
         {
             Get(_spawnPoint.position);
@@ -62,7 +62,7 @@ public class CubeSpawner : Spawner<Cube>
     private void HandleCubeReleased(Cube cube)
     {
         Release(cube);
+        CubeReleased?.Invoke(cube);
         _bombSpawner.Get(cube.transform.position);
-        cube.gameObject.SetActive(false);
     }
 }
