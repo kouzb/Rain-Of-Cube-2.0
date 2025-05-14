@@ -11,6 +11,7 @@ public class BombSpawner : Spawner<Bomb>
     public override Bomb Get(Vector3 position)
     {
         Bomb bomb = base.Get(position);
+        bomb.Exploded += Release;
         return bomb;
     }
 
@@ -19,10 +20,15 @@ public class BombSpawner : Spawner<Bomb>
         _pool = new ObjectPool<Bomb>(
             CreateInstance,
             bomb => bomb.gameObject.SetActive(true),
-            bomb => bomb.gameObject.SetActive(false),
+            actionOnRelease: OnReleaseBomb,
             collectionCheck: true,
             defaultCapacity: _poolCapacity,
             maxSize: _poolMaxSize
             );
+    }
+
+    private void OnReleaseBomb(Bomb bomb)
+    {
+        bomb.Exploded -= Release;
     }
 }

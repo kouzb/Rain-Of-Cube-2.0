@@ -12,8 +12,6 @@ public abstract class Spawner<T> : MonoBehaviour where T: MonoBehaviour
     protected int _totalCreated;
     protected int _totalSpawned;
 
-    public event Action Created;
-
     public int TotalCreated => _totalCreated;
     public int TotalSpawned => _totalSpawned;
     public int ActiveCount => _pool.CountActive;
@@ -28,7 +26,6 @@ public abstract class Spawner<T> : MonoBehaviour where T: MonoBehaviour
     public virtual T Get(Vector3 position)
     {
         T instance = _pool.Get();
-        Created?.Invoke();
         instance.transform.position = position; 
         instance.gameObject.SetActive(true);
         _totalSpawned++;
@@ -42,11 +39,16 @@ public abstract class Spawner<T> : MonoBehaviour where T: MonoBehaviour
         return instance;
     }
 
+    protected virtual void Release(T spawnedObject)
+    {
+        _pool.Release(spawnedObject);
+    }
+
     private void CheckCreatedObj()
     {
         if (_totalCreated <= _poolMaxSize)
         {
-            _totalCreated++;
+            _totalCreated++; 
         }
     }
 }

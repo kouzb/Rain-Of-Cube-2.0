@@ -29,6 +29,24 @@ public class Bomb : MonoBehaviour
         return _meshRenderer.material;
     }
 
+    private IEnumerator ChangeColor()
+    {
+        Color startColor = _meshRenderer.material.color;
+        float timer = 0f;
+
+        while(timer < _colorChangeDuration )
+        {
+            timer += Time.deltaTime;
+            float alpha = Mathf.Lerp(1f, 0f, timer / _colorChangeDuration );
+            _meshRenderer.material.color = new Color(startColor.r, startColor.g, startColor.b, alpha);
+            yield return null;
+        }
+
+        Explode();
+        yield return null;  
+        gameObject.SetActive(false);
+    }
+
     private void Explode()
     {
         Collider[] colliders = Physics.OverlapSphere(transform.position, _explosionRadius);
@@ -44,27 +62,8 @@ public class Bomb : MonoBehaviour
         Exploded?.Invoke(this);
     }
 
-    private IEnumerator ChangeColor()
-    {
-        float timer = 0f;
-        Color startColor = _meshRenderer.material.color;
-
-        while(timer < _colorChangeDuration )
-        {
-            timer += Time.deltaTime;
-            float alpha = Mathf.Lerp(1f, 0f, timer / _colorChangeDuration );
-            _meshRenderer.material.color = new Color(startColor.r, startColor.g, startColor.b, alpha);
-            yield return null;
-        }
-
-        Explode();
-        yield return null;  
-        gameObject.SetActive(false);
-    }
-
     private void OnDisable()
     {
         StopCoroutine(ChangeColor());
     }
-
 }

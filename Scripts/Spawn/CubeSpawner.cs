@@ -23,7 +23,7 @@ public class CubeSpawner : Spawner<Cube>
         StartCoroutine(ContinuousSpawning());
     }
 
-    private void Release(Cube cube) 
+    protected override void Release(Cube cube) 
     {
         cube.Released -= HandleCubeReleased;
         _pool.Release(cube);
