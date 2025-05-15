@@ -29,6 +29,7 @@ public class BombSpawner : Spawner<Bomb>
 
     private void OnReleaseBomb(Bomb bomb)
     {
+        bomb.gameObject.SetActive(false);
         bomb.Exploded -= Release;
     }
 }

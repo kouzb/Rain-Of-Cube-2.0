@@ -14,7 +14,7 @@ public class Bomb : MonoBehaviour
 
     public event Action<Bomb> Exploded;
 
-    private void Start()
+    private void Awake()
     {
         _meshRenderer = GetComponent<MeshRenderer>();
     }
@@ -43,8 +43,7 @@ public class Bomb : MonoBehaviour
         }
 
         Explode();
-        yield return null;  
-        gameObject.SetActive(false);
+        yield return null;  ;
     }
 
     private void Explode()

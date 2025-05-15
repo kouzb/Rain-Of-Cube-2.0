@@ -14,7 +14,7 @@ public class Cube : MonoBehaviour
 
     public event UnityAction<Cube> Released;
 
-    private void Start()
+    private void Awake()
     {
         _renedererColor = GetComponent<MeshRenderer>();
         _rigidbody = GetComponent<Rigidbody>();
