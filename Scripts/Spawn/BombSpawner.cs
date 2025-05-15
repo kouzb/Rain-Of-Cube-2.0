@@ -3,11 +3,6 @@ using UnityEngine.Pool;
 
 public class BombSpawner : Spawner<Bomb>
 {
-    protected override void Awake()
-    {
-        base.Awake();
-    }
-
     public override Bomb Get(Vector3 position)
     {
         Bomb bomb = base.Get(position);

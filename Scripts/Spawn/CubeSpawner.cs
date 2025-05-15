@@ -13,11 +13,6 @@ public class CubeSpawner : Spawner<Cube>
 
     private bool _isSpawning = true;
 
-    protected override void Awake()
-    {
-        base.Awake();
-    }
-
     private void Start()
     {
         StartCoroutine(ContinuousSpawning());
