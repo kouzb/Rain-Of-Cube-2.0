@@ -21,18 +21,18 @@ public class CubeSpawner : Spawner<Cube>
     protected override void Release(Cube cube) 
     {
         cube.Released -= HandleCubeReleased;
-        _pool.Release(cube);
+        Pool.Release(cube);
     }
 
     protected override void InitializePool()
     {
-        _pool = new ObjectPool<Cube>(
+        Pool = new ObjectPool<Cube>(
             CreateInstance,
             Prepare,
             cube => cube.gameObject.SetActive(false),
             collectionCheck: true,
-            defaultCapacity: _poolCapacity,
-            maxSize: _poolMaxSize
+            defaultCapacity: PoolCapacity,
+            maxSize: PoolMaxSize
             );
     }
 

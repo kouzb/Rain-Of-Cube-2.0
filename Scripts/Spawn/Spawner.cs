@@ -4,17 +4,18 @@ using UnityEngine.Pool;
 
 public abstract class Spawner<T> : MonoBehaviour where T: MonoBehaviour
 {
-    [SerializeField] protected T _prefab;
-    [SerializeField] protected int _poolCapacity = 5;
-    [SerializeField] protected int _poolMaxSize = 10;
+    [SerializeField] protected T Prefab;
+    [SerializeField] protected int PoolCapacity = 5;
+    [SerializeField] protected int PoolMaxSize = 10;
 
-    protected ObjectPool<T> _pool;
-    protected int _totalCreated;
-    protected int _totalSpawned;
+    protected ObjectPool<T> Pool;
+
+    private int _totalCreated;
+    private int _totalSpawned;
 
     public int TotalCreated => _totalCreated;
     public int TotalSpawned => _totalSpawned;
-    public int ActiveCount => _pool.CountActive;
+    public int ActiveCount => Pool.CountActive;
 
     protected virtual void Awake()
     {
@@ -25,7 +26,7 @@ public abstract class Spawner<T> : MonoBehaviour where T: MonoBehaviour
 
     public virtual T Get(Vector3 position)
     {
-        T instance = _pool.Get();
+        T instance = Pool.Get();
         instance.transform.position = position; 
         instance.gameObject.SetActive(true);
         _totalSpawned++;
@@ -35,18 +36,18 @@ public abstract class Spawner<T> : MonoBehaviour where T: MonoBehaviour
 
     protected virtual T CreateInstance()
     {
-        T instance = Instantiate(_prefab);
+        T instance = Instantiate(Prefab);
         return instance;
     }
 
     protected virtual void Release(T spawnedObject)
     {
-        _pool.Release(spawnedObject);
+        Pool.Release(spawnedObject);
     }
 
     private void CheckCreatedObj()
     {
-        if (_totalCreated <= _poolMaxSize)
+        if (_totalCreated <= PoolMaxSize)
         {
             _totalCreated++; 
         }

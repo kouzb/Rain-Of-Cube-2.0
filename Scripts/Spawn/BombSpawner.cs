@@ -12,13 +12,13 @@ public class BombSpawner : Spawner<Bomb>
 
     protected override void InitializePool()
     {
-        _pool = new ObjectPool<Bomb>(
+        Pool = new ObjectPool<Bomb>(
             CreateInstance,
             bomb => bomb.gameObject.SetActive(true),
             actionOnRelease: OnReleaseBomb,
             collectionCheck: true,
-            defaultCapacity: _poolCapacity,
-            maxSize: _poolMaxSize
+            defaultCapacity: PoolCapacity,
+            maxSize: PoolMaxSize
             );
     }
 
