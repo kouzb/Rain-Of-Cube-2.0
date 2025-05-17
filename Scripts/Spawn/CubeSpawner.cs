@@ -9,9 +9,9 @@ public class CubeSpawner : Spawner<Cube>
     [SerializeField] private float _repeatRate = 1f;
     [SerializeField] private Transform _spawnPoint;
 
-    public event Action<Cube> CubeReleased;
-
     private bool _isSpawning = true;
+
+    public event Action<Cube> CubeReleased;
 
     private void Start()
     {

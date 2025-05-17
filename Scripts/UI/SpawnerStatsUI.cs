@@ -5,26 +5,27 @@ public class SpawnerStatsUI : MonoBehaviour
 {
     [SerializeField] private Spawner<Bomb> _bombSpawner;
     [SerializeField] private Spawner<Cube> _cubeSpawner;
-
-    [SerializeField] protected TMP_Text _cubeStatsText;
-
+    [SerializeField] private TMP_Text _cubeStatsText;
     [SerializeField] private TMP_Text _bombStatsText;
 
-    private void Update()
+    private string _cubeTitle = "cube";
+    private string _bombTitle = "bomb";
+
+    private void OnEnable()
     {
-        ShowStatsCube();
-        ShowStatsBomb();
+        _bombSpawner.CountStateUpdate += (t, a, c) => ShowStats(_bombStatsText, _bombTitle, t, a, c);
+        _cubeSpawner.CountStateUpdate += (t, a, c) => ShowStats(_cubeStatsText, _cubeTitle, t, a, c); 
     }
 
-    private void ShowStatsCube()
+    private void ShowStats(TMP_Text targetText, string title, float totalSpawned, float allCreated, float countActive)
     {
-        _cubeStatsText.text = "Кубы \n Заспавнено :" + _cubeSpawner.TotalSpawned + "\nСоздано :" + _cubeSpawner.TotalCreated + 
-            "\nАктивных на сцене: " + _cubeSpawner.ActiveCount;
+        targetText.text = title + " \n Заспавнено :" + totalSpawned + "\nСоздано :" + allCreated + 
+            "\nАктивных на сцене: " + countActive;
     }
 
-    private void ShowStatsBomb()
+    private void OnDisable()
     {
-        _bombStatsText.text = "Бомбы \n Заспавнено :" + _bombSpawner.TotalSpawned + "\nСоздано :" + _bombSpawner.TotalCreated +
-            "\nАктивных на сцене: " + _bombSpawner.ActiveCount;
+        _bombSpawner.CountStateUpdate -= (t, a, c) => ShowStats(_bombStatsText, _bombTitle, t, a, c);
+        _cubeSpawner.CountStateUpdate -= (t, a, c) => ShowStats(_cubeStatsText, _cubeTitle, t, a, c);
     }
 }
