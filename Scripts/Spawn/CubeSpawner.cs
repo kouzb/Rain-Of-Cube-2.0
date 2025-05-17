@@ -15,7 +15,7 @@ public class CubeSpawner : Spawner<Cube>
 
     private void Start()
     {
-        StartCoroutine(ContinuousSpawning());
+        StartCoroutine(SpawningCoroutine());
     }
 
     protected override void Release(Cube cube) 
@@ -43,7 +43,7 @@ public class CubeSpawner : Spawner<Cube>
         cube.Released += HandleCubeReleased;
     }
 
-    private IEnumerator ContinuousSpawning()
+    private IEnumerator SpawningCoroutine()
     {
         WaitForSeconds wait = new WaitForSeconds(_repeatRate);
         
