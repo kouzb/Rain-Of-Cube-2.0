@@ -3,15 +3,15 @@ using UnityEngine.Pool;
 
 public abstract class Spawner<T> : InfoSpawner where T: MonoBehaviour
 {
-    [SerializeField] protected T Prefab;
-    [SerializeField] protected int PoolCapacity = 5;
-    [SerializeField] protected int PoolMaxSize = 10;
+    [SerializeField] private T _prefab;
+    [SerializeField] private int _poolCapacity = 5;
+    [SerializeField] private int _poolMaxSize = 10;
 
-    protected ObjectPool<T> Pool;
+    protected ObjectPool<T> _pool;
     private int _totalSpawned;
 
-    private int _allCreated => Pool.CountAll;
-    private int _activeCount => Pool.CountActive;
+    private int AllCreated => _pool.CountAll;
+    private int ActiveCount => _pool.CountActive;
 
     protected virtual void Awake()
     {
@@ -20,25 +20,30 @@ public abstract class Spawner<T> : InfoSpawner where T: MonoBehaviour
 
     protected abstract void InitializePool();
 
-    public virtual T Get(Vector3 position)
+    protected virtual T Get(Vector3 position)
     {
-        T instance = Pool.Get();
+        T instance = _pool.Get();
         instance.transform.position = position; 
         instance.gameObject.SetActive(true);
         _totalSpawned++;
-        InvokeStateUpdate(_totalSpawned, _allCreated, _activeCount);
+        InvokeStateUpdate(_totalSpawned, AllCreated, ActiveCount);
         return instance;
     }
 
-    protected virtual T CreateInstance()
+    protected virtual void OnRelease(T spawnedObject)
     {
-        T instance = Instantiate(Prefab);
-        return instance;
+        _pool.Release(spawnedObject);
+        spawnedObject.gameObject.SetActive(false);
+        InvokeStateUpdate(_totalSpawned, AllCreated, ActiveCount);
     }
 
-    protected virtual void Release(T spawnedObject)
+    protected virtual int GetPoolCapacity()
     {
-        Pool.Release(spawnedObject);
-        InvokeStateUpdate(_totalSpawned, _allCreated, _activeCount);
+        return _poolCapacity;
+    }
+
+    protected virtual int GetPoolMaxSize()
+    {
+        return _poolMaxSize;
     }
 }

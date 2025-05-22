@@ -18,29 +18,22 @@ public class CubeSpawner : Spawner<Cube>
         StartCoroutine(SpawningCoroutine());
     }
 
-    protected override void Release(Cube cube) 
-    {
-        cube.Released -= HandleCubeReleased;
-        Pool.Release(cube);
-    }
+    protected override void InitializePool() { }
 
-    protected override void InitializePool()
+    protected override Cube Get(Vector3 position)
     {
-        Pool = new ObjectPool<Cube>(
-            CreateInstance,
-            Prepare,
-            cube => cube.gameObject.SetActive(false),
-            collectionCheck: true,
-            defaultCapacity: PoolCapacity,
-            maxSize: PoolMaxSize
-            );
-    }
-
-    private void Prepare(Cube cube)
-    {
+        Cube cube = base.Get(position);
         cube.transform.position = _spawnPoint.position;
-        cube.gameObject.SetActive(true);
         cube.Released += HandleCubeReleased;
+        return cube;
+    }
+
+    protected override void OnRelease(Cube cube) 
+    {
+        CubeReleased?.Invoke(cube);
+        cube.Released -= HandleCubeReleased;
+        _pool.Release(cube);
+        //_bombSpawner.Get(cube.transform.position);
     }
 
     private IEnumerator SpawningCoroutine()
@@ -56,8 +49,8 @@ public class CubeSpawner : Spawner<Cube>
 
     private void HandleCubeReleased(Cube cube)
     {
-        Release(cube);
-        CubeReleased?.Invoke(cube);
-        _bombSpawner.Get(cube.transform.position);
+        OnRelease(cube);
+        
+        
     }
 }

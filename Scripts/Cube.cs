@@ -22,7 +22,9 @@ public class Cube : MonoBehaviour
 
     private void OnEnable()
     {
-        ResetParameters();
+        _rigidbody.velocity = Vector3.zero;
+        _renedererColor.material.color = Color.white;
+        _isTouched = false;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -43,13 +45,6 @@ public class Cube : MonoBehaviour
         float currentLifeTime = Random.Range(_minLifeTime, _maxLifeTime);
         yield return new WaitForSeconds(currentLifeTime);
         Deactivate();
-    }
-
-    private void ResetParameters()
-    {
-        _rigidbody.velocity = Vector3.zero;
-        _renedererColor.material.color = Color.white;
-        _isTouched = false;
     }
 
     private void Deactivate()
